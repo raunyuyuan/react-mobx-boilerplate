@@ -1,21 +1,24 @@
-import { types, Instance, SnapshotOut} from "mobx-state-tree";
-
-const userModel = types.model({
-  userID: types.number,
-  userName: types.string
-})
-
-interface UserData extends SnapshotOut<typeof userModel> {}
+import { observable, action, intercept, } from 'mobx'
 
 
-export const globalStore = types
-  .model({
-    user: userModel
-  })
-  .actions(self => ({
-    add(userData: UserData) {
-      self.user = userData
-    }
-  }))
+interface UserData {
+  userID?: number;
+  userName?: string;
+}
 
-export interface NumbersType extends Instance<typeof globalStore> {}
+interface GlobalState {
+  userData: UserData;
+  setUserData(userData: UserData): void
+}
+
+export class globalState implements GlobalState {
+  @observable userData: UserData = {
+
+  }
+
+  @action
+  setUserData(userData: UserData) {
+    this.userData = userData
+  }
+
+}
