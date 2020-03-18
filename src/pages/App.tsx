@@ -3,8 +3,8 @@ import {
   BrowserRouter as Router, Switch, Route, useRouteMatch,
   useParams, Link, Redirect, useHistory, useLocation, RouteProps
 } from 'react-router-dom'
-import {Store, useStores} from '../models'
-import { Provider, Observer } from 'mobx-react';
+import {useStores, StoreProvider} from '../models'
+import { Observer } from 'mobx-react';
 
 // 定义路由根路径
 const basename = '/'
@@ -24,7 +24,7 @@ function App() {
             <Link to="/topics">Topics</Link>
           </li>
         </ul>
-      <Provider {...Store}>
+      <StoreProvider>
         <Switch>
           <PrivateRoute path="/about">
             <Topics />
@@ -39,7 +39,7 @@ function App() {
             <Home />
           </Route>
         </Switch>
-        </Provider>
+        </StoreProvider>
       </div>
     </Router>
   );
