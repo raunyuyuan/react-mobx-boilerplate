@@ -238,11 +238,12 @@ export function initAnimation() {
 }
 
 export function scrollTo(dom, {top, left}) {
+  const hasTop = top != null
+  const hasLeft = left != null
+  if ((!hasTop && !hasLeft) || !dom) return
   const animaObj = initAnimation()
   const initScrollTop = dom.scrollTop
   const initScrollLeft = dom.scrollLeft
-  const hasTop = top != null
-  const hasLeft = left != null
   const transition =  easings["ease-in-out"]
   if (dom.scrollTo) {
     dom.scrollTo({
