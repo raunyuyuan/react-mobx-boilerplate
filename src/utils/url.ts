@@ -1,8 +1,6 @@
 // /user/profile/xxx => [ '/user',  '/user/profile', , '/user/profile/xxx']
 export function urlToList(url: string): any[] {
   const a = url.split('/').filter(i => i)
-  const arr: any[] = []
-
   return a.map((_, idx) => `/${a.slice(0, idx + 1).join('/')}`)
 }
 
