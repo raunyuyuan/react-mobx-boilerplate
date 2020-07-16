@@ -1,47 +1,57 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {
   BrowserRouter as Router, Switch, Route, useRouteMatch,
   useParams, Link, Redirect, useHistory, useLocation, RouteProps
 } from 'react-router-dom'
 import {useStores, StoreProvider} from '../models'
 import { Observer } from 'mobx-react';
-
+const Test = React.lazy(() => import('./test'))
 // 定义路由根路径
 const basename = '/'
 
 function App() {
   return (
-    <Router basename={basename}>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/topics">Topics</Link>
-          </li>
-        </ul>
-      <StoreProvider>
-        <Switch>
-          <PrivateRoute path="/about">
-            <Topics />
-          </PrivateRoute>
-          <Route path="/topics">
-            <About />
-          </Route>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-        </StoreProvider>
-      </div>
-    </Router>
+    
+      <Router basename={basename}>
+        <div>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+            <li>
+              <Link to="/topics">Topics</Link>
+            </li>
+            <li>
+              <Link to="/test">Test React.lazy</Link>
+            </li>
+          </ul>
+        <StoreProvider>
+          <Switch>
+            <PrivateRoute path="/about">
+              <Topics />
+            </PrivateRoute>
+            <Route path="/topics">
+              <About />
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/test">
+              <Suspense fallback={<div>loading</div>}>
+                <Test />
+              </Suspense>
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+          </StoreProvider>
+        </div>
+      </Router>
+    
   );
 }
 

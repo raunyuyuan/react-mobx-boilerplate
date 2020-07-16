@@ -37,10 +37,10 @@ export const thousandsCount = (v: number | string): typeof v | string => {
 
 /**
  * @param  {string | number} v the wait format value
- * @param {number | string} a
+ * @param {number} a
  * @return {string} return a number with a string type that keep {a} decimals and rounded
  */
-export const toFixed = (v: string | number, a: number | string): typeof v | string => {
+export const toFixed = (v: string | number, a: number): typeof v | string => {
   const numType = isNumber(v)
   const anumType = isNumber(a)
   if (!anumType) {
@@ -66,7 +66,7 @@ export const toFixed = (v: string | number, a: number | string): typeof v | stri
       }
       return formatV
     }
-    let afteraNum: number = Number((formatV as String)[pointIdx + (a as number) + 1])
+    let afteraNum: number = Number((formatV as string)[pointIdx + (a as number) + 1])
     if (a > 0) {
       if (afteraNum >= 5) {
         return `${(formatV as string).substring(0, pointIdx)}.${Number(recordDecimal) + 1}` 

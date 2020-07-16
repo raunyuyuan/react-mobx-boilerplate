@@ -67,6 +67,3 @@ export function get({url, data, config}: any) {
 export function post({url, data, config}: any) {
   return instance.post(url, data, config)
 }
-
-
-export default service
