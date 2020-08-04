@@ -1,33 +1,40 @@
-import React, {Suspense} from 'react';
+import React, { Suspense } from "react";
 import {
-  BrowserRouter as Router, Switch, Route, useRouteMatch,
-  useParams, Link, Redirect, useHistory, useLocation, RouteProps
-} from 'react-router-dom'
-import {useStores, StoreProvider} from '../models'
-import { Observer } from 'mobx-react';
-const Test = React.lazy(() => import('./test'))
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useRouteMatch,
+  useParams,
+  Link,
+  Redirect,
+  useHistory,
+  useLocation,
+  RouteProps,
+} from "react-router-dom";
+import { Observer } from "mobx-react";
+import { useStores, StoreProvider } from "../models";
+const Test = React.lazy(() => import("./test"));
 // 定义路由根路径
-const basename = '/'
+const basename = "/";
 
 function App() {
   return (
-    
-      <Router basename={basename}>
-        <div>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/topics">Topics</Link>
-            </li>
-            <li>
-              <Link to="/test">Test React.lazy</Link>
-            </li>
-          </ul>
+    <Router basename={basename}>
+      <div>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/topics">Topics</Link>
+          </li>
+          <li>
+            <Link to="/test">Test React.lazy</Link>
+          </li>
+        </ul>
         <StoreProvider>
           <Switch>
             <PrivateRoute path="/about">
@@ -48,27 +55,26 @@ function App() {
               <Home />
             </Route>
           </Switch>
-          </StoreProvider>
-        </div>
-      </Router>
-    
+        </StoreProvider>
+      </div>
+    </Router>
   );
 }
 
 const fakeAuth = {
   isAuthenticated: false,
-  authenticate(cb: () => void) {
+  authenticate(cb: () => void): void {
     fakeAuth.isAuthenticated = true;
     setTimeout(cb, 100); // fake async
   },
-  signout(cb: () => void) {
+  signout(cb: () => void): void {
     fakeAuth.isAuthenticated = false;
     setTimeout(cb, 100);
-  }
+  },
 };
 
 interface Props extends RouteProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 function PrivateRoute({ children, ...rest }: Props) {
   return (
@@ -78,34 +84,34 @@ function PrivateRoute({ children, ...rest }: Props) {
         fakeAuth.isAuthenticated ? (
           children
         ) : (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: location }
-              }}
-            />
-          )
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
+        )
       }
     />
   );
 }
 
 interface State {
-  from: any
+  from: any;
 }
 function LoginPage() {
-  let history = useHistory();
-  let location = useLocation<State>();
-  const {globalState} = useStores()
-  let { from } = location.state || { from: { pathname: "/" } };
-  let login = () => {
+  const history = useHistory();
+  const location = useLocation<State>();
+  const { globalState } = useStores();
+  const { from } = location.state || { from: { pathname: "/" } };
+  const login = () => {
     fakeAuth.authenticate(() => {
       history.replace(from);
     });
     globalState.setUserData({
       userID: 1,
-      userName: '12'
-    })
+      userName: "12",
+    });
   };
 
   return (
@@ -129,22 +135,18 @@ function Users() {
 }
 
 function Topics() {
-  let match = useRouteMatch();
-  const {globalState} = useStores()
+  const match = useRouteMatch();
+  const { globalState } = useStores();
   return (
     <div>
       <h2>Topics</h2>
-      <Observer>
-          {() => <div>{globalState.userData?.userID}</div>}
-      </Observer>
+      <Observer>{() => <div>{globalState.userData?.userID}</div>}</Observer>
       <ul>
         <li>
           <Link to={`${match.url}/components`}>Components</Link>
         </li>
         <li>
-          <Link to={`${match.url}/props-v-state`}>
-            Props v. State
-          </Link>
+          <Link to={`${match.url}/props-v-state`}>Props v. State</Link>
         </li>
       </ul>
 
@@ -165,7 +167,7 @@ function Topics() {
 }
 
 function Topic() {
-  let { topicId } = useParams();
+  const { topicId } = useParams();
   return <h3>Requested topic ID: {topicId}</h3>;
 }
 
