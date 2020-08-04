@@ -1,5 +1,3 @@
-import React from 'react';
+import React from "react";
 
-export default ({children}: {children: any}) => (
-  <header>{children}</header>
-)
+export default ({ children }: { children: any }) => <header>{children}</header>;

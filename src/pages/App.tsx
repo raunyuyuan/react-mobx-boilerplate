@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import { Observer } from "mobx-react";
 import { useStores, StoreProvider } from "../models";
+
 const Test = React.lazy(() => import("./test"));
 // 定义路由根路径
 const basename = "/";
@@ -116,7 +117,10 @@ function LoginPage() {
 
   return (
     <div>
-      <p>You must log in to view the page at {from.pathname}</p>
+      <p>
+        You must log in to view the page at
+        {from.pathname}
+      </p>
       <button onClick={login}>Log in</button>
     </div>
   );
@@ -168,7 +172,8 @@ function Topics() {
 
 function Topic() {
   const { topicId } = useParams();
-  return <h3>Requested topic ID: {topicId}</h3>;
+  return <h3>
+Requested topic ID:{topicId}</h3>;
 }
 
 export default App;

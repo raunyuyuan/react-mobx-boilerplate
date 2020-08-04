@@ -26,6 +26,6 @@
   },
   "include": [
     "src",
-    ".eslint.js"
+    ".eslintrc.js"
   ]
 }

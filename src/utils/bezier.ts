@@ -1,20 +1,19 @@
-
 interface Bezier {
   (aX: number): number;
-  getControlPoints(): [{x: number, y: number}, {x: number, y: number}];
+  getControlPoints(): [{ x: number; y: number }, { x: number; y: number }];
   toString(): string;
 }
 
 // heavy load
 export function generateCubicBezier(mX1: number, mY1: number, mX2: number, mY2: number): Bezier;
 export function generateCubicBezier(mX1, mY1, mX2, mY2) {
-  let NEWTON_ITERATIONS = 4,
-    NEWTON_MIN_SLOPE = 0.001,
-    SUBDIVISION_PRECISION = 0.0000001,
-    SUBDIVISION_MAX_ITERATIONS = 10,
-    kSplineTableSize = 11,
-    kSampleStepSize = 1.0 / (kSplineTableSize - 1.0),
-    float32ArraySupported = typeof Float32Array !== 'undefined';
+  const NEWTON_ITERATIONS = 4;
+  const NEWTON_MIN_SLOPE = 0.001;
+  const SUBDIVISION_PRECISION = 0.0000001;
+  const SUBDIVISION_MAX_ITERATIONS = 10;
+  const kSplineTableSize = 11;
+  const kSampleStepSize = 1.0 / (kSplineTableSize - 1.0);
+  const float32ArraySupported = typeof Float32Array !== "undefined";
 
   /* Must contain four arguments. */
   if (arguments.length !== 4) {
@@ -34,7 +33,7 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
   mX1 = Math.max(mX1, 0);
   mX2 = Math.max(mX2, 0);
 
-  let mSampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : new Array(kSplineTableSize);
+  const mSampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : new Array(kSplineTableSize);
 
   function A(aA1, aA2) {
     return 1.0 - 3.0 * aA2 + 3.0 * aA1;
@@ -51,22 +50,22 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
   function calcBezier(aT, aA1, aA2) {
     return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT;
   }
-  
+
   function getSlope(aT, aA1, aA2) {
     return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1);
   }
 
   function newtonRaphsonIterate(aX, aGuessT) {
     for (let i = 0; i < NEWTON_ITERATIONS; ++i) {
-      let currentSlope = getSlope(aGuessT, mX1, mX2);
+      const currentSlope = getSlope(aGuessT, mX1, mX2);
 
       if (currentSlope === 0.0) {
         return aGuessT;
       }
 
-      let currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+      const currentX = calcBezier(aGuessT, mX1, mX2) - aX;
       aGuessT -= currentX / currentSlope;
-    }/*  */
+    } /*  */
 
     return aGuessT;
   }
@@ -78,7 +77,9 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
   }
 
   function binarySubdivide(aX, aA, aB) {
-    let currentX, currentT, i = 0;
+    let currentX;
+    let currentT;
+    let i = 0;
 
     do {
       currentT = aA + (aB - aA) / 2.0;
@@ -93,12 +94,10 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
     return currentT;
   }
 
-  
-
   function getTForX(aX) {
-    let intervalStart = 0.0,
-      currentSample = 1,
-      lastSample = kSplineTableSize - 1;
+    let intervalStart = 0.0;
+    let currentSample = 1;
+    const lastSample = kSplineTableSize - 1;
 
     for (; currentSample !== lastSample && mSampleValues[currentSample] <= aX; ++currentSample) {
       intervalStart += kSampleStepSize;
@@ -106,17 +105,18 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
 
     --currentSample;
 
-    let dist = (aX - mSampleValues[currentSample]) / (mSampleValues[currentSample + 1] - mSampleValues[currentSample]),
-      guessForT = intervalStart + dist * kSampleStepSize,
-      initialSlope = getSlope(guessForT, mX1, mX2);
+    const dist =
+      (aX - mSampleValues[currentSample]) / (mSampleValues[currentSample + 1] - mSampleValues[currentSample]);
+    const guessForT = intervalStart + dist * kSampleStepSize;
+    const initialSlope = getSlope(guessForT, mX1, mX2);
 
     if (initialSlope >= NEWTON_MIN_SLOPE) {
       return newtonRaphsonIterate(aX, guessForT);
-    } else if (initialSlope === 0.0) {
-      return guessForT;
-    } else {
-      return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize);
     }
+    if (initialSlope === 0.0) {
+      return guessForT;
+    }
+    return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize);
   }
 
   let _precomputed = false;
@@ -128,7 +128,7 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
     }
   }
 
-  const f: Bezier = function(aX) {
+  const f: Bezier = function (aX) {
     if (!_precomputed) {
       precompute();
     }
@@ -145,18 +145,21 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
     return calcBezier(getTForX(aX), mY1, mY2);
   };
 
-  f.getControlPoints = function() {
-    return [{
-      x: mX1,
-      y: mY1
-    }, {
-      x: mX2,
-      y: mY2
-    }];
+  f.getControlPoints = function () {
+    return [
+      {
+        x: mX1,
+        y: mY1,
+      },
+      {
+        x: mX2,
+        y: mY2,
+      },
+    ];
   };
 
-  let str = "generateBezier(" + [mX1, mY1, mX2, mY2] + ")";
-  f.toString = function() {
+  const str = `generateBezier(${[mX1, mY1, mX2, mY2]})`;
+  f.toString = function () {
     return str;
   };
 
@@ -165,68 +168,67 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
 
 interface BezierFun {
   (start: number, end: number, percent: number): number;
-} 
+}
 
 interface CubicBezier {
   (t1: number, p1: number, t2: number, p2: number): BezierFun;
 }
-export const cubicBezier: CubicBezier = function( t1, p1, t2, p2 ) {
-  let bezier = generateCubicBezier( t1, p1, t2, p2 );
+export const cubicBezier: CubicBezier = function (t1, p1, t2, p2) {
+  const bezier = generateCubicBezier(t1, p1, t2, p2);
 
-  const a: BezierFun = function (start, end, percent ) {
-    return start + ( end - start ) * bezier( percent );
+  const a: BezierFun = function (start, end, percent) {
+    return start + (end - start) * bezier(percent);
   };
-  return a
+  return a;
 };
 
 export const easings = {
-  'linear': function( start, end, percent ){
+  linear(start, end, percent) {
     return start + (end - start) * percent;
   },
 
   // default easings
-  'ease': cubicBezier( 0.25, 0.1, 0.25, 1 ),
-  'ease-in': cubicBezier( 0.42, 0, 1, 1 ),
-  'ease-out': cubicBezier( 0, 0, 0.58, 1 ),
-  'ease-in-out': cubicBezier( 0.42, 0, 0.58, 1 ),
+  ease: cubicBezier(0.25, 0.1, 0.25, 1),
+  "ease-in": cubicBezier(0.42, 0, 1, 1),
+  "ease-out": cubicBezier(0, 0, 0.58, 1),
+  "ease-in-out": cubicBezier(0.42, 0, 0.58, 1),
 
   // sine
-  'ease-in-sine': cubicBezier( 0.47, 0, 0.745, 0.715 ),
-  'ease-out-sine': cubicBezier( 0.39, 0.575, 0.565, 1 ),
-  'ease-in-out-sine': cubicBezier( 0.445, 0.05, 0.55, 0.95 ),
+  "ease-in-sine": cubicBezier(0.47, 0, 0.745, 0.715),
+  "ease-out-sine": cubicBezier(0.39, 0.575, 0.565, 1),
+  "ease-in-out-sine": cubicBezier(0.445, 0.05, 0.55, 0.95),
 
   // quad
-  'ease-in-quad': cubicBezier( 0.55, 0.085, 0.68, 0.53 ),
-  'ease-out-quad': cubicBezier( 0.25, 0.46, 0.45, 0.94 ),
-  'ease-in-out-quad': cubicBezier( 0.455, 0.03, 0.515, 0.955 ),
+  "ease-in-quad": cubicBezier(0.55, 0.085, 0.68, 0.53),
+  "ease-out-quad": cubicBezier(0.25, 0.46, 0.45, 0.94),
+  "ease-in-out-quad": cubicBezier(0.455, 0.03, 0.515, 0.955),
 
   // cubic
-  'ease-in-cubic': cubicBezier( 0.55, 0.055, 0.675, 0.19 ),
-  'ease-out-cubic': cubicBezier( 0.215, 0.61, 0.355, 1 ),
-  'ease-in-out-cubic': cubicBezier( 0.645, 0.045, 0.355, 1 ),
+  "ease-in-cubic": cubicBezier(0.55, 0.055, 0.675, 0.19),
+  "ease-out-cubic": cubicBezier(0.215, 0.61, 0.355, 1),
+  "ease-in-out-cubic": cubicBezier(0.645, 0.045, 0.355, 1),
 
   // quart
-  'ease-in-quart': cubicBezier( 0.895, 0.03, 0.685, 0.22 ),
-  'ease-out-quart': cubicBezier( 0.165, 0.84, 0.44, 1 ),
-  'ease-in-out-quart': cubicBezier( 0.77, 0, 0.175, 1 ),
+  "ease-in-quart": cubicBezier(0.895, 0.03, 0.685, 0.22),
+  "ease-out-quart": cubicBezier(0.165, 0.84, 0.44, 1),
+  "ease-in-out-quart": cubicBezier(0.77, 0, 0.175, 1),
 
   // quint
-  'ease-in-quint': cubicBezier( 0.755, 0.05, 0.855, 0.06 ),
-  'ease-out-quint': cubicBezier( 0.23, 1, 0.32, 1 ),
-  'ease-in-out-quint': cubicBezier( 0.86, 0, 0.07, 1 ),
+  "ease-in-quint": cubicBezier(0.755, 0.05, 0.855, 0.06),
+  "ease-out-quint": cubicBezier(0.23, 1, 0.32, 1),
+  "ease-in-out-quint": cubicBezier(0.86, 0, 0.07, 1),
 
   // expo
-  'ease-in-expo': cubicBezier( 0.95, 0.05, 0.795, 0.035 ),
-  'ease-out-expo': cubicBezier( 0.19, 1, 0.22, 1 ),
-  'ease-in-out-expo': cubicBezier( 1, 0, 0, 1 ),
+  "ease-in-expo": cubicBezier(0.95, 0.05, 0.795, 0.035),
+  "ease-out-expo": cubicBezier(0.19, 1, 0.22, 1),
+  "ease-in-out-expo": cubicBezier(1, 0, 0, 1),
 
   // circ
-  'ease-in-circ': cubicBezier( 0.6, 0.04, 0.98, 0.335 ),
-  'ease-out-circ': cubicBezier( 0.075, 0.82, 0.165, 1 ),
-  'ease-in-out-circ': cubicBezier( 0.785, 0.135, 0.15, 0.86 ),
-
+  "ease-in-circ": cubicBezier(0.6, 0.04, 0.98, 0.335),
+  "ease-out-circ": cubicBezier(0.075, 0.82, 0.165, 1),
+  "ease-in-out-circ": cubicBezier(0.785, 0.135, 0.15, 0.86),
 
   // user param easings...
 
-  'cubic-bezier': cubicBezier
+  "cubic-bezier": cubicBezier,
 };

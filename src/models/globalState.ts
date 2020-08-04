@@ -1,5 +1,4 @@
-import { observable, action, intercept, } from 'mobx'
-
+import { observable, action, intercept } from "mobx";
 
 interface UserData {
   userID?: number;
@@ -8,17 +7,14 @@ interface UserData {
 
 interface GlobalState {
   userData: UserData;
-  setUserData(userData: UserData): void
+  setUserData(userData: UserData): void;
 }
 
 export class globalState implements GlobalState {
-  @observable userData: UserData = {
-
-  }
+  @observable userData: UserData = {};
 
   @action
   setUserData(userData: UserData) {
-    this.userData = userData
+    this.userData = userData;
   }
-
 }
