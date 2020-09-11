@@ -10,7 +10,7 @@ interface GlobalState {
   setUserData(userData: UserData): void;
 }
 
-export class globalState implements GlobalState {
+class globalState implements GlobalState {
   @observable userData: UserData = {};
 
   @action
@@ -18,3 +18,6 @@ export class globalState implements GlobalState {
     this.userData = userData;
   }
 }
+
+// eslint-disable-next-line import/prefer-default-export
+export { globalState };

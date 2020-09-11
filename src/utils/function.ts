@@ -1,3 +1,4 @@
+/* eslint-disable */
 // 缓存请求函数
 export function initCatchFetch(failed?: number) {
   let data = null;

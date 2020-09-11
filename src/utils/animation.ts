@@ -41,7 +41,7 @@ export function scrollTo(dom, { top, left }) {
     if (hasTop && hasLeft) {
       const endS = (Math.abs(top - initScrollTop) * 1.5 + Math.abs(left - initScrollLeft) * 1.5) / 2;
       const percent = duration / endS;
-
+      /* eslint-disable no-param-reassign */
       dom.scrollLeft = transition(initScrollLeft, left, percent);
       dom.scrollTop = transition(initScrollTop, top, percent);
       if (percent === 1) stop();
@@ -61,5 +61,6 @@ export function scrollTo(dom, { top, left }) {
       dom.scrollLeft = transition(initScrollLeft, left, percent);
       if (percent === 1) stop();
     }
+    /* eslint-enable no-param-reassign */
   });
 }

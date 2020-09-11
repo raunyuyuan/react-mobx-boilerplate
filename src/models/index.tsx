@@ -1,8 +1,8 @@
 import React from "react";
-import { MobXProviderContext } from "mobx-react";
 import { globalState } from "./globalState";
 
 const Store = {
+  // eslint-disable-next-line new-cap
   globalState: new globalState(),
 };
 

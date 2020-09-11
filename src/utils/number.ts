@@ -3,6 +3,7 @@ export const isNumber = (v: string | number): typeof v | false => {
   if (typeResult === "number") return typeResult;
   if (typeResult === "string") {
     if ((v as string).trim() === "") return false;
+    // eslint-disable-next-line no-restricted-globals
     return isNaN(Number(v)) ? false : typeResult;
   }
   return false;
@@ -14,6 +15,7 @@ export const thousandsCount = (v: number | string): typeof v | string => {
     console.error("param forward to thousandsCount is not a number");
     return v;
   }
+  // eslint-disable-next-line no-param-reassign
   if (numType === "number") v = String(v);
   const pointIdx = (v as string).indexOf(".");
   const isNegative = (v as string).startsWith("-");
@@ -51,6 +53,7 @@ export const toFixed = (v: string | number, a: number): typeof v | string => {
   }
   let formatV = v;
   if (numType === "number") formatV = String(v);
+  // eslint-disable-next-line no-param-reassign
   if (anumType === "string") a = Number(a);
   const pointIdx = (formatV as string).indexOf(".");
   const hasPoint = pointIdx !== -1;
@@ -59,7 +62,7 @@ export const toFixed = (v: string | number, a: number): typeof v | string => {
     const len = recordDecimal.length;
     const fullDecimalLen = (formatV as string).length - pointIdx;
     if (fullDecimalLen <= a) {
-      for (let i = len; i < a; i++) {
+      for (let i = len; i < a; i += 1) {
         formatV += "0";
       }
       return formatV;
@@ -79,7 +82,7 @@ export const toFixed = (v: string | number, a: number): typeof v | string => {
     formatV += ".";
     while (i < a) {
       formatV += "0";
-      i++;
+      i += 1;
     }
   }
   return formatV;

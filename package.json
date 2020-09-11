@@ -84,7 +84,7 @@
   "lint-staged": {
     "src/*.{js,jsx,mjs,ts,tsx}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint 'src/**/*.tsx' 'src/**/*.ts' --fix"
     ],
     "src/*.{css,scss,less,json,html,md,markdown}": [
       "prettier --write"
@@ -94,10 +94,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "lint": "eslint 'src/**/*.tsx'  --fix"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "lint": "eslint 'src/**/*.tsx' 'src/**/*.ts' --fix"
   },
   "browserslist": {
     "production": [

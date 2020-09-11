@@ -16,7 +16,17 @@ import { useStores, StoreProvider } from "../models";
 
 const Test = React.lazy(() => import("./test"));
 // 定义路由根路径
-const basename = "/";
+const basename = "/app";
+
+function require1Json(i) {
+  // eslint-disable-next-line
+  const a = require("./"+ i +".json");
+  console.log(a);
+}
+
+setTimeout(() => {
+  require1Json(Math.ceil(Math.random() + 1));
+}, 6000);
 
 function App() {
   return (
@@ -105,7 +115,7 @@ function LoginPage() {
   const location = useLocation<State>();
   const { globalState } = useStores();
   const { from } = location.state || { from: { pathname: "/" } };
-  const login = () => {
+  const login = (): void => {
     fakeAuth.authenticate(() => {
       history.replace(from);
     });
@@ -121,6 +131,7 @@ function LoginPage() {
         You must log in to view the page at
         {from.pathname}
       </p>
+      {/* eslint-disable-next-line react/button-has-type */}
       <button onClick={login}>Log in</button>
     </div>
   );
@@ -172,8 +183,12 @@ function Topics() {
 
 function Topic() {
   const { topicId } = useParams();
-  return <h3>
-Requested topic ID:{topicId}</h3>;
+  return (
+    <h3>
+      {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+      Requested topic ID:{topicId}
+    </h3>
+  );
 }
 
 export default App;

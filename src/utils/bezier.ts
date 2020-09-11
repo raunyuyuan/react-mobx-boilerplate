@@ -1,6 +1,15 @@
 interface Bezier {
   (aX: number): number;
-  getControlPoints(): [{ x: number; y: number }, { x: number; y: number }];
+  getControlPoints(): [
+    {
+      x: number;
+      y: number;
+    },
+    {
+      x: number;
+      y: number;
+    }
+  ];
   toString(): string;
 }
 
@@ -21,17 +30,20 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
   }
 
   /* Arguments must be numbers. */
-  for (let i = 0; i < 4; ++i) {
+  for (let i = 0; i < 4; i += 1) {
+    // eslint-disable-next-line prefer-rest-params, no-restricted-globals
     if (typeof arguments[i] !== "number" || isNaN(arguments[i]) || !isFinite(arguments[i])) {
       return false;
     }
   }
 
   /* X values must be in the [0, 1] range. */
+  /* eslint-disable no-param-reassign */
   mX1 = Math.min(mX1, 1);
   mX2 = Math.min(mX2, 1);
   mX1 = Math.max(mX1, 0);
   mX2 = Math.max(mX2, 0);
+  /* eslint-enable no-param-reassign */
 
   const mSampleValues = float32ArraySupported ? new Float32Array(kSplineTableSize) : new Array(kSplineTableSize);
 
@@ -56,7 +68,7 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
   }
 
   function newtonRaphsonIterate(aX, aGuessT) {
-    for (let i = 0; i < NEWTON_ITERATIONS; ++i) {
+    for (let i = 0; i < NEWTON_ITERATIONS; i += 1) {
       const currentSlope = getSlope(aGuessT, mX1, mX2);
 
       if (currentSlope === 0.0) {
@@ -64,6 +76,7 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
       }
 
       const currentX = calcBezier(aGuessT, mX1, mX2) - aX;
+      // eslint-disable-next-line no-param-reassign
       aGuessT -= currentX / currentSlope;
     } /*  */
 
@@ -71,7 +84,7 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
   }
 
   function calcSampleValues() {
-    for (let i = 0; i < kSplineTableSize; ++i) {
+    for (let i = 0; i < kSplineTableSize; i += 1) {
       mSampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2);
     }
   }
@@ -85,10 +98,13 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
       currentT = aA + (aB - aA) / 2.0;
       currentX = calcBezier(currentT, mX1, mX2) - aX;
       if (currentX > 0.0) {
+        // eslint-disable-next-line no-param-reassign
         aB = currentT;
       } else {
+        // eslint-disable-next-line no-param-reassign
         aA = currentT;
       }
+      // eslint-disable-next-line no-plusplus
     } while (Math.abs(currentX) > SUBDIVISION_PRECISION && ++i < SUBDIVISION_MAX_ITERATIONS);
 
     return currentT;
@@ -99,11 +115,11 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
     let currentSample = 1;
     const lastSample = kSplineTableSize - 1;
 
-    for (; currentSample !== lastSample && mSampleValues[currentSample] <= aX; ++currentSample) {
+    for (; currentSample !== lastSample && mSampleValues[currentSample] <= aX; currentSample += 1) {
       intervalStart += kSampleStepSize;
     }
 
-    --currentSample;
+    currentSample -= 1;
 
     const dist =
       (aX - mSampleValues[currentSample]) / (mSampleValues[currentSample + 1] - mSampleValues[currentSample]);
@@ -119,6 +135,7 @@ export function generateCubicBezier(mX1, mY1, mX2, mY2) {
     return binarySubdivide(aX, intervalStart, intervalStart + kSampleStepSize);
   }
 
+  // eslint-disable-next-line no-underscore-dangle
   let _precomputed = false;
 
   function precompute() {

@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require("path");
+
 module.exports = {
   root: true,
   // 定义ESLint的解析器
@@ -42,6 +45,8 @@ module.exports = {
   // "error" 或 2 - 开启规则，使用错误级别的错误：error (当被触发的时候，程序会退出)
   rules: {
     semi: 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-curly-newline": 0,
     "no-unused-vars": [
       1,
       {
@@ -53,12 +58,14 @@ module.exports = {
       },
     ],
     "no-useless-escape": 2,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
     "react/jsx-filename-extension": [
       1,
       {
         extensions: ["jsx", "tsx"],
       },
     ],
+    "import/no-unresolved": [1, { ignore: ["@/*"] }],
     "import/extensions": [
       "error",
       "ignorePackages",

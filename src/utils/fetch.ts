@@ -8,6 +8,7 @@ const instance = axios.create({
   transformRequest: [
     function (data) {
       let ret = "";
+      // eslint-disable-next-line guard-for-in, no-restricted-syntax
       for (const it in data) {
         ret += `${encodeURIComponent(it)}=${encodeURIComponent(data[it])}&`;
       }
@@ -18,6 +19,7 @@ const instance = axios.create({
     function (data) {
       if (typeof data === "string") {
         try {
+          // eslint-disable-next-line no-param-reassign
           data = JSON.parse(data);
         } catch (e) {
           console.log(data);
