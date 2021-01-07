@@ -4,6 +4,7 @@ const instance = axios.create({
   baseURL: "/",
   timeout: 60000,
   responseType: "json",
+  // Content-Type 规定上传数据的类型，可以特定为上传文件
   headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
   transformRequest: [
     function (data) {
