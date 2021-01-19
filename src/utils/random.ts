@@ -38,20 +38,15 @@ export function shuffle<Item>(a: Item[], lo: number, hi: number): Item[];
 export function shuffle<Item>(a: Item[], lo?, hi?): Item[] {
   if (!Array.isArray(a)) throw new Error("Arguments must be array");
   const len = a.length;
+  let start = 0;
+  let end = len - 1;
   if (lo != null && hi != null) {
-    if (lo < 0 || hi > len || lo > hi) throw new Error(`subarray indices out of bounds: [${lo}, ${hi})`);
-    for (let i = lo; i < hi; i += 1) {
-      const n = uniform(i, hi);
-      const temp = a[i];
-      // eslint-disable-next-line no-param-reassign
-      a[i] = a[n];
-      // eslint-disable-next-line no-param-reassign
-      a[n] = temp;
-    }
-    return a;
+    if (lo < 0 || hi >= len || lo > hi) throw new Error(`subarray indices out of bounds: [${lo}, ${hi})`);
+    start = lo;
+    end = hi;
   }
 
-  for (let i = 0; i < len; i += 1) {
+  for (let i = start; i <= end; i += 1) {
     const n = uniform(i, len);
     const temp = a[i];
     // eslint-disable-next-line no-param-reassign
